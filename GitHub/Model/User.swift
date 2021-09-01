@@ -21,4 +21,3 @@ struct User : Codable {
     var followers:  Int
     var createdAt: String
 }
-//teste
