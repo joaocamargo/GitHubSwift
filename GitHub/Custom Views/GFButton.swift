@@ -33,9 +33,6 @@ class GFButton: UIButton {
         setTitleColor(.white, for: .normal) // WRONG WAY titleLabel?.textColor = .white
         titleLabel?.font      = UIFont.preferredFont(forTextStyle: .headline)
         translatesAutoresizingMaskIntoConstraints = false // use autolayout!
-    }
-    
-    
-    
+    }  
     
 }
