@@ -15,8 +15,9 @@ class FollowerListVC: UIViewController {
     
     var username: String!
     var followers: [Follower] = []
+    var filteredFollowers: [Follower] = []
     var page = 1
-    var pageSize = 20
+    var pageSize = 100
     var hasMoreFollowers = true
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, Follower>!
@@ -24,16 +25,22 @@ class FollowerListVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
+        configureSearchController()
         configureCollectionView()
         getFollowers(username: username, page: page)
         configureDataSource()
         
+       
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //navigationController?.isNavigationBarHidden = false
         navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
     }
     
@@ -50,6 +57,16 @@ class FollowerListVC: UIViewController {
         collectionView.delegate = self
     }
     
+    func configureSearchController() {
+        let searchController = UISearchController()
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = "Search for a username"
+        searchController.obscuresBackgroundDuringPresentation = false //tira o esmaecido
+        //searchController.isActive = true
+        navigationItem.hidesSearchBarWhenScrolling = false //isso faz ele aparecer logo que carregado
+        navigationItem.searchController = searchController
+    }
 
     
     func getFollowers(username: String, page :Int){
@@ -62,11 +79,19 @@ class FollowerListVC: UIViewController {
             
             switch result {
             case .success(let followers):
-                
                 if followers.count < self.pageSize {   self.hasMoreFollowers = false }
                 print("call again")
                 self.followers.append(contentsOf: followers)
-                self.updateData()
+                
+                if self.followers.count == 0 {
+                    let message = "No followers found!"
+                    DispatchQueue.main.async {
+                        self.showEmptyStateView(with: message, in: self.view)
+                        return
+                    }
+                }
+                
+                self.updateData(on: followers)
             case .failure(let errorMessage):
                 self.presentGFAlertOnMainThread(title: "Error", message: errorMessage.rawValue, buttonTitle: "Ok")
             }
@@ -81,7 +106,7 @@ class FollowerListVC: UIViewController {
         })
     }
     
-    func updateData() {
+    func updateData(on followers: [Follower]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section,Follower>()
         snapshot.appendSections([.main])
         snapshot.appendItems(followers)
@@ -89,7 +114,6 @@ class FollowerListVC: UIViewController {
             self.dataSource.apply(snapshot, animatingDifferences: true)
         }
     }
-    
 }
 
 extension FollowerListVC: UICollectionViewDelegate {
@@ -106,27 +130,20 @@ extension FollowerListVC: UICollectionViewDelegate {
             getFollowers(username: username, page: page)
         }
         
-        
+    }
+}
+
+extension FollowerListVC: UISearchResultsUpdating, UISearchBarDelegate {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let filter = searchController.searchBar.text, !filter.isEmpty else { return } // coloca no filtro qualquer valor q esteja ou retorna pra nao continuar, tem que colocar o ! antes de filter
+        filteredFollowers = followers.filter { $0.login.lowercased().contains(filter.lowercased()) }
+        updateData(on: filteredFollowers)
     }
     
     
-    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        updateData(on: followers)
+    }
     
 }
 
-
-//OLD  WAY
-//NetworkManager.shared.getFollowers(for: username, page: 1) { (followers, errorMessage) in
-//
-//
-//
-//    guard let followers = followers else {
-//        self.presentGFAlertOnMainThread(title: "Error", message: errorMessage!.rawValue, buttonTitle: "Ok")
-//        return
-//    }
-//
-//    print("Followers.count \(followers.count)\n")
-//    print(followers)
-//
-//
-//}
