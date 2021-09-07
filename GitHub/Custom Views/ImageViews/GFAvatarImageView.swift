@@ -29,7 +29,7 @@ class GFAvatarImageView: UIImageView {
         translatesAutoresizingMaskIntoConstraints = false
     }
     
-    func donwloadImage(from urlString: String) {
+    func downloadImage(from urlString: String) {
         
         let cacheKey = NSString(string: urlString)
         

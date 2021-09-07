@@ -45,8 +45,8 @@ class GFAlertVC: UIViewController {
         view.addSubview(containerView)
         containerView.backgroundColor = .systemBackground
         containerView.layer.cornerRadius = 16
-        containerView.layer.borderColor = UIColor.label.cgColor
         containerView.layer.borderWidth = 2
+        containerView.layer.borderColor = UIColor.white.cgColor
         containerView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -96,8 +96,7 @@ class GFAlertVC: UIViewController {
             messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding),
             messageLabel.bottomAnchor.constraint(equalTo: actionButton.topAnchor, constant: -12)
 
-        ])
-        
+        ])        
     }
     
     @objc func dismissVC(){
