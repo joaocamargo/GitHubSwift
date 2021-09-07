@@ -1,14 +1,15 @@
 //
-//  GFAlertVC.swift
+//  GFAlert.swift
 //  GitHub
 //
-//  Created by joao camargo on 30/08/21.
+//  Created by joao camargo on 07/09/21.
 //
 
 import UIKit
 
 protocol GFAlertVCDelegate: class {
     func pressOKButton()
+    func pressSecondaryButton()
 }
 
 class GFAlertVC: UIViewController {
@@ -16,22 +17,29 @@ class GFAlertVC: UIViewController {
     let containerView = UIView()
     let titleLabel = GFTitleLabel(textAlignment: .center, fontSize: 20)
     let messageLabel = GFBodyLabel(textAlignment: .center)
+    let stackView = UIStackView()
     let actionButton = GFButton(backgroundColor: .systemPink, title: "Ok")
+    let secondaryButton = GFButton(backgroundColor: .systemGray2, title: "Cancel")
+
     
     var alertTitle: String?
     var message: String?
     var buttonTitle: String?
+    var buttonSecondaryTitle: String?
     
     let padding: CGFloat = 20
     
     weak var delegate: GFAlertVCDelegate?
     
     
-    init(title: String, message: String, buttonTitle: String){
+    init(title: String, message: String, buttonTitle: String, buttonSecondaryTitle: String = "Cancel"){
         super.init(nibName: nil, bundle: nil)
         self.alertTitle = title
         self.message = message
-        self.buttonTitle = buttonTitle
+        //self.buttonTitle = buttonTitle
+        //self.buttonSecondaryTitle = buttonSecondaryTitle
+        actionButton.setTitle(buttonTitle, for: .normal)
+        secondaryButton.setTitle(buttonSecondaryTitle, for: .normal)
     }
     
     required init?(coder: NSCoder) {
@@ -43,8 +51,9 @@ class GFAlertVC: UIViewController {
         view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.75)
         configureContainerView()
         configureTitleLabel()
-        configureActionButton()
         configureMessageLabel()
+        configureStackView()
+        configureButton()
     }
     
     func configureContainerView() {
@@ -60,7 +69,6 @@ class GFAlertVC: UIViewController {
             containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             containerView.widthAnchor.constraint(equalToConstant: 280),
             containerView.heightAnchor.constraint(equalToConstant: 220)
-
         ])
     }
     
@@ -73,23 +81,14 @@ class GFAlertVC: UIViewController {
             titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding),
             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding),
             titleLabel.heightAnchor.constraint(equalToConstant: 28)
-
+            
         ])
     }
     
-    func configureActionButton(){
-        containerView.addSubview(actionButton)
-        actionButton.setTitle(buttonTitle ?? "Ok", for: .normal)
-        actionButton.addTarget(self, action: #selector(dismissVC), for: .touchUpInside)
-        
-        NSLayoutConstraint.activate([
-            actionButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -padding),
-            actionButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding),
-            actionButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding),
-            actionButton.heightAnchor.constraint(equalToConstant: 44)
-
-        ])
-    }
+    func configureStackView() { }
+    
+    func configureButton(){}
+    
     
     func configureMessageLabel(){
         containerView.addSubview(messageLabel)
@@ -100,24 +99,25 @@ class GFAlertVC: UIViewController {
             messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding),
             messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding),
-            messageLabel.bottomAnchor.constraint(equalTo: actionButton.topAnchor, constant: -12)
-
-        ])        
+            //messageLabel.bottomAnchor.constraint(equalTo: actionButton.topAnchor, constant: -12)
+        ])
     }
+     
+
     
     @objc func dismissVC(){
         print("removendo alert da tela")
         dismiss(animated: true)
         delegate?.pressOKButton()
         print("voltando")
-
     }
+    
+    @objc func secondaryButtonAction() {
+        print("removendo alert da tela")
+        dismiss(animated: true)
+        delegate?.pressSecondaryButton()
+        print("voltando")
+    }
+    
+    
 }
-
-//
-//extension GFAlertVC: GFAlertVCDelegate {
-//    func letGo() {
-//        dismiss(animated: true)
-//    }
-//}
-

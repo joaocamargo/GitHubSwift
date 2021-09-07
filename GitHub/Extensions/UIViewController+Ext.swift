@@ -12,13 +12,17 @@ fileprivate var containerView: UIView!
 
 
 extension UIViewController: GFAlertVCDelegate {
+    func pressSecondaryButton() {
+        self.dismiss(animated: true)
+    }
+    
     func pressOKButton() {
         navigationController?.popViewController(animated: true)
     }
     
     func presentGFAlertOnMainThread(title: String, message: String, buttonTitle: String) { //}, completion: @escaping((Bool) -> ()) = { _ in }) {
         DispatchQueue.main.async {
-            let alertVC = GFAlertVC(title: title, message: message, buttonTitle: buttonTitle)
+            let alertVC = GFAlertTwoButtonsVC(title: title, message: message, buttonTitle: buttonTitle)
             alertVC.delegate = self
             alertVC.modalPresentationStyle =  .overFullScreen
             alertVC.modalTransitionStyle =  .crossDissolve

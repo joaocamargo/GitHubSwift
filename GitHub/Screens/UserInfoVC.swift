@@ -88,7 +88,6 @@ class UserInfoVC: UIViewController {
         
         let repoFollowerVC = GFFollowerItemVC(user: user)
         repoFollowerVC.delegate = self
-
         
             self.add(childVC: GFUserInfoHeaderVC(user: user), to: self.headerView)
             self.add(childVC: repoItemVC, to: self.itemViewOne)

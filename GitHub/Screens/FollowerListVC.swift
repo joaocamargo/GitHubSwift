@@ -169,8 +169,7 @@ extension FollowerListVC: UISearchResultsUpdating, UISearchBarDelegate {
 
 extension FollowerListVC: FollowerListVCDelegate {
     func didRequestFollowers(for username: String) {
-        
-       
+               
         // get follower for that user
         self.username = username
         title = username
@@ -185,14 +184,4 @@ extension FollowerListVC: FollowerListVCDelegate {
     
     
 }
-
-
-//extension FollowerListVC: GFAlertVCDelegate {
-//    func letGo() {
-//        print("rretornando pra tela anterior")
-//        self.navigationController?.popViewController(animated: true)
-//    }
-//    
-//
-//}
 
