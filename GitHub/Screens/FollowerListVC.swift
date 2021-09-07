@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol FollowerListVCDelegate: class {
+    func didRequestFollowers(for username: String)
+}
+
 class FollowerListVC: UIViewController {
     
     enum Section {
@@ -30,8 +34,6 @@ class FollowerListVC: UIViewController {
         configureCollectionView()
         getFollowers(username: username, page: page)
         configureDataSource()
-        
-       
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -95,6 +97,7 @@ class FollowerListVC: UIViewController {
                 self.updateData(on: followers)
             case .failure(let errorMessage):
                 self.presentGFAlertOnMainThread(title: "Error", message: errorMessage.rawValue, buttonTitle: "Ok")
+                //self.letGo()
             }
         }
     }
@@ -137,6 +140,7 @@ extension FollowerListVC: UICollectionViewDelegate {
         let activeArray = isSearching ? filteredFollowers : followers
         var follower = activeArray[indexPath.item]
         let destVC = UserInfoVC()
+        destVC.delegate = self
         destVC.username = follower.login
         let navController = UINavigationController(rootViewController: destVC)
         present(navController, animated: true)
@@ -161,6 +165,34 @@ extension FollowerListVC: UISearchResultsUpdating, UISearchBarDelegate {
         isSearching = false
         updateData(on: followers)
     }
+}
+
+extension FollowerListVC: FollowerListVCDelegate {
+    func didRequestFollowers(for username: String) {
+        
+       
+        // get follower for that user
+        self.username = username
+        title = username
+        page = 1
+        isSearching = false
+        hasMoreFollowers = true
+        followers.removeAll()
+        filteredFollowers.removeAll()
+        collectionView.setContentOffset(CGPoint(x: 0, y: -140), animated: true) // scroll to the top
+        getFollowers(username: username, page: page)
+    }
+    
     
 }
+
+
+//extension FollowerListVC: GFAlertVCDelegate {
+//    func letGo() {
+//        print("rretornando pra tela anterior")
+//        self.navigationController?.popViewController(animated: true)
+//    }
+//    
+//
+//}
 

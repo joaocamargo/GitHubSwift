@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol GFAlertVCDelegate: class {
+    func pressOKButton()
+}
+
 class GFAlertVC: UIViewController {
     
     let containerView = UIView()
@@ -19,6 +23,8 @@ class GFAlertVC: UIViewController {
     var buttonTitle: String?
     
     let padding: CGFloat = 20
+    
+    weak var delegate: GFAlertVCDelegate?
     
     
     init(title: String, message: String, buttonTitle: String){
@@ -100,6 +106,18 @@ class GFAlertVC: UIViewController {
     }
     
     @objc func dismissVC(){
+        print("removendo alert da tela")
         dismiss(animated: true)
+        delegate?.pressOKButton()
+        print("voltando")
+
     }
 }
+
+//
+//extension GFAlertVC: GFAlertVCDelegate {
+//    func letGo() {
+//        dismiss(animated: true)
+//    }
+//}
+
