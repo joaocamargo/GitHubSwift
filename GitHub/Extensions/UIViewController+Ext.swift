@@ -8,21 +8,34 @@
 import UIKit
 import SafariServices
 
+
+//classebvc
+
 fileprivate var containerView: UIView!
+
+protocol AlertButtonsUIViewControllerDelegate {
+    func doFirst()
+    func doSecond()
+}
+
+var delegateAlertButtons: AlertButtonsUIViewControllerDelegate?
 
 
 extension UIViewController: GFAlertVCDelegate {
+
     func pressSecondaryButton() {
-        self.dismiss(animated: true)
+        delegateAlertButtons?.doSecond()
+        
     }
     
     func pressOKButton() {
-        navigationController?.popViewController(animated: true)
+        delegateAlertButtons?.doFirst()
     }
+    
     
     func presentGFAlertOnMainThread(title: String, message: String, buttonTitle: String) { //}, completion: @escaping((Bool) -> ()) = { _ in }) {
         DispatchQueue.main.async {
-            let alertVC = GFAlertTwoButtonsVC(title: title, message: message, buttonTitle: buttonTitle)
+            let alertVC = GFAlertOKVC(title: title, message: message, buttonTitle: buttonTitle)
             alertVC.delegate = self
             alertVC.modalPresentationStyle =  .overFullScreen
             alertVC.modalTransitionStyle =  .crossDissolve
@@ -30,7 +43,6 @@ extension UIViewController: GFAlertVCDelegate {
         }
     }
     
-
     
     func presentSafariVC(with url: URL) {
         let safariVC = SFSafariViewController(url: url)
