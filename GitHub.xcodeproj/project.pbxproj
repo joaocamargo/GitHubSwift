@@ -39,6 +39,8 @@
 		059C2A9726DADCBA0047E323 /* GitHubUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059C2A9626DADCBA0047E323 /* GitHubUITests.swift */; };
 		05A2F75826E034EF0091FE4C /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A2F75726E034EF0091FE4C /* NetworkManager.swift */; };
 		05AF33FD26E6D799005AF517 /* UserInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AF33FC26E6D799005AF517 /* UserInfoVC.swift */; };
+		05B038A926ED83B300004E70 /* GFAlertContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B038A826ED83B300004E70 /* GFAlertContainerView.swift */; };
+		05B038AB26ED8DEE00004E70 /* GFDataLoadingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B038AA26ED8DEE00004E70 /* GFDataLoadingVC.swift */; };
 		05CE039E26E7C888005C8FD0 /* GFAlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CE039D26E7C888005C8FD0 /* GFAlertVC.swift */; };
 		05CE03A126E7CC18005C8FD0 /* GFAlertTwoButtonsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CE03A026E7CC18005C8FD0 /* GFAlertTwoButtonsVC.swift */; };
 		05D45A4C26DD078900ABA395 /* GFTitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D45A4B26DD078900ABA395 /* GFTitleLabel.swift */; };
@@ -103,6 +105,8 @@
 		059C2A9826DADCBA0047E323 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05A2F75726E034EF0091FE4C /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		05AF33FC26E6D799005AF517 /* UserInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoVC.swift; sourceTree = "<group>"; };
+		05B038A826ED83B300004E70 /* GFAlertContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GFAlertContainerView.swift; sourceTree = "<group>"; };
+		05B038AA26ED8DEE00004E70 /* GFDataLoadingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GFDataLoadingVC.swift; sourceTree = "<group>"; };
 		05CE039D26E7C888005C8FD0 /* GFAlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GFAlertVC.swift; sourceTree = "<group>"; };
 		05CE03A026E7CC18005C8FD0 /* GFAlertTwoButtonsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GFAlertTwoButtonsVC.swift; sourceTree = "<group>"; };
 		05D45A4B26DD078900ABA395 /* GFTitleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GFTitleLabel.swift; sourceTree = "<group>"; };
@@ -150,6 +154,7 @@
 			children = (
 				0528D13126E6328F00847BB3 /* GFEmptyStateView.swift */,
 				056590FB26E713D800E5D579 /* GFItemInfoView.swift */,
+				05B038A826ED83B300004E70 /* GFAlertContainerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -184,6 +189,7 @@
 				05CE039F26E7C88F005C8FD0 /* Alert */,
 				0565910326E71D0700E5D579 /* ItemInfoVC */,
 				056590F526E700A300E5D579 /* GFUserInfoHeaderVC.swift */,
+				05B038AA26ED8DEE00004E70 /* GFDataLoadingVC.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -505,12 +511,14 @@
 				0547C53B26E0ECAE005AFEE9 /* GFError.swift in Sources */,
 				057A7E5226E7F633002FCE40 /* PersistenceManager.swift in Sources */,
 				056590F626E700A300E5D579 /* GFUserInfoHeaderVC.swift in Sources */,
+				05B038AB26ED8DEE00004E70 /* GFDataLoadingVC.swift in Sources */,
 				05AF33FD26E6D799005AF517 /* UserInfoVC.swift in Sources */,
 				05872C1226DEF22500B71C62 /* Follower.swift in Sources */,
 				0565910526E7217300E5D579 /* Date+Ext.swift in Sources */,
 				056590F826E7010400E5D579 /* GFSecondaryTitleLabel.swift in Sources */,
 				059C2A7526DADCB80047E323 /* AppDelegate.swift in Sources */,
 				0528D13226E6328F00847BB3 /* GFEmptyStateView.swift in Sources */,
+				05B038A926ED83B300004E70 /* GFAlertContainerView.swift in Sources */,
 				0543733026EC51DD005B430B /* FavoriteCell.swift in Sources */,
 				05A2F75826E034EF0091FE4C /* NetworkManager.swift in Sources */,
 				05D45A5226DD19A200ABA395 /* UIViewController+Ext.swift in Sources */,

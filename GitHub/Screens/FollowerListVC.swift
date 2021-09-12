@@ -13,7 +13,7 @@ protocol FollowerListVCDelegate: class {
     func didRequestFollowers(for username: String)
 }
 
-class FollowerListVC: UIViewController {
+class FollowerListVC: GFDataLoadingVC {
     
     enum Section {
         case main
@@ -28,6 +28,7 @@ class FollowerListVC: UIViewController {
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, Follower>!
     var isSearching = false
+    var isLoadingMoreFollowers = false
     
     
     init(username: String) {
@@ -40,7 +41,7 @@ class FollowerListVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -85,14 +86,14 @@ class FollowerListVC: UIViewController {
     func configureSearchController() {
         let searchController = UISearchController()
         searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
+        //searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "Search for a username"
         searchController.obscuresBackgroundDuringPresentation = false //tira o esmaecido
         //searchController.isActive = true
         navigationItem.hidesSearchBarWhenScrolling = false //isso faz ele aparecer logo que carregado
         navigationItem.searchController = searchController
     }
-
+    
     
     func getFollowers(username: String, page :Int){
         showLoadingView()
@@ -119,7 +120,7 @@ class FollowerListVC: UIViewController {
                 self.updateData(on: followers)
             case .failure(let errorMessage):
                 self.presentGFAlertOnMainThread(title: "Error", message: errorMessage.rawValue, buttonTitle: "Ok")
-                //self.letGo()
+            //self.letGo()
             }
         }
     }
@@ -145,6 +146,7 @@ class FollowerListVC: UIViewController {
     @objc func addButtonTapped(){
         
         showLoadingView()
+        isLoadingMoreFollowers = true
         
         NetworkManager.shared.getUserInfo(for: username){ [weak self] result in
             guard let self = self else { return }
@@ -165,8 +167,10 @@ class FollowerListVC: UIViewController {
                 }
             case .failure(let error):
                 self.presentGFAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "OK")
-            
+                
             }
+            
+            self.isLoadingMoreFollowers = false
         }
     }
 }
@@ -180,7 +184,7 @@ extension FollowerListVC: UICollectionViewDelegate {
         
         
         if offsetY > contentHeight - height {
-            guard hasMoreFollowers else { return }
+            guard hasMoreFollowers, !isLoadingMoreFollowers else { return }
             page += 1
             getFollowers(username: username, page: page)
         }
@@ -199,28 +203,30 @@ extension FollowerListVC: UICollectionViewDelegate {
     
 }
 
-extension FollowerListVC: UISearchResultsUpdating, UISearchBarDelegate {
+extension FollowerListVC: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let filter = searchController.searchBar.text, !filter.isEmpty
         else {
-                isSearching = false
+            filteredFollowers.removeAll()
+            updateData(on: followers)
+            isSearching = false
             return
-        } // coloca no filtro qualquer valor q esteja ou retorna pra nao continuar, tem que colocar o ! antes de filter
+        } // coloca no filtro qualqu er valor q esteja ou retorna pra nao continuar, tem que colocar o ! antes de filter
         isSearching = true
         filteredFollowers = followers.filter { $0.login.lowercased().contains(filter.lowercased()) }
         updateData(on: filteredFollowers)
     }
-    
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        isSearching = false
-        updateData(on: followers)
-    }
+//
+//
+//    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+//        isSearching = false
+//        updateData(on: followers)
+//    }
 }
 
 extension FollowerListVC: FollowerListVCDelegate {
     func didRequestFollowers(for username: String) {
-               
+        
         // get follower for that user
         self.username = username
         title = username
@@ -229,7 +235,8 @@ extension FollowerListVC: FollowerListVCDelegate {
         hasMoreFollowers = true
         followers.removeAll()
         filteredFollowers.removeAll()
-        collectionView.setContentOffset(CGPoint(x: 0, y: -140), animated: true) // scroll to the top
+        //collectionView.setContentOffset(CGPoint(x: 0, y: -140), animated: true) // scroll to the top
+        collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
         getFollowers(username: username, page: page)
     }
     
