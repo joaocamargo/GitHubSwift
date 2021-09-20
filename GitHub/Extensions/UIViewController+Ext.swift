@@ -25,14 +25,12 @@ extension UIViewController: GFAlertVCDelegate {
 
     func pressSecondaryButton() {
         delegateAlertButtons?.doSecond()
-        
     }
     
     func pressOKButton() {
         delegateAlertButtons?.doFirst()
     }
-    
-    
+        
     func presentGFAlertOnMainThread(title: String, message: String, buttonTitle: String) { //}, completion: @escaping((Bool) -> ()) = { _ in }) {
         DispatchQueue.main.async {
             let alertVC = GFAlertOKVC(title: title, message: message, buttonTitle: buttonTitle)

@@ -20,7 +20,6 @@ class GFAlertVC: UIViewController {
     let stackView = UIStackView()
     let actionButton = GFButton(backgroundColor: .systemPink, title: "Ok")
     let secondaryButton = GFButton(backgroundColor: .systemGray2, title: "Cancel")
-
     
     var alertTitle: String?
     var message: String?
@@ -58,7 +57,7 @@ class GFAlertVC: UIViewController {
     
     func configureContainerView() {
         view.addSubview(containerView)
-
+        containerView.addSubviews(titleLabel, messageLabel)
         
         NSLayoutConstraint.activate([
             containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -70,24 +69,20 @@ class GFAlertVC: UIViewController {
     
     
     func configureTitleLabel(){
-        containerView.addSubview(titleLabel)
         titleLabel.text = alertTitle ?? "Something went wrong"
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: padding),
             titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding),
             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding),
             titleLabel.heightAnchor.constraint(equalToConstant: 28)
-            
         ])
     }
     
-    func configureStackView() { }
+    func configureStackView() {}
     
     func configureButton(){}
-    
-    
+        
     func configureMessageLabel(){
-        containerView.addSubview(messageLabel)
         messageLabel.text = message ?? "Unknown error"
         messageLabel.numberOfLines = 4
         
@@ -98,8 +93,6 @@ class GFAlertVC: UIViewController {
             //messageLabel.bottomAnchor.constraint(equalTo: actionButton.topAnchor, constant: -12)
         ])
     }
-     
-
     
     @objc func dismissVC(){
         print("removendo alert da tela")
@@ -113,7 +106,5 @@ class GFAlertVC: UIViewController {
         dismiss(animated: true)
         delegate?.pressSecondaryButton()
         print("voltando")
-    }
-    
-    
+    }    
 }

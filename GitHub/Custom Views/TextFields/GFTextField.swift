@@ -20,6 +20,7 @@ class GFTextField: UITextField {
     
     private func configure() {
         translatesAutoresizingMaskIntoConstraints = false
+        
         layer.cornerRadius = 10
         layer.borderWidth = 2
         layer.borderColor = UIColor.systemGray4.cgColor
@@ -30,12 +31,11 @@ class GFTextField: UITextField {
         font = UIFont.preferredFont(forTextStyle: .title2) // preferred tem relaçao com o tamanho do texto que o usuario escolhe no sistema operacional
         adjustsFontSizeToFitWidth = true // se o campo ficar maior ao escrever ele se ajusta
         minimumFontSize = 12 // este ajuste so acontece ate deixar o tamanho minimo de 12
+        
         backgroundColor = .tertiarySystemBackground
         autocorrectionType = .no
         returnKeyType = .go
-        
         clearButtonMode = .whileEditing
-        
         placeholder = "Enter a username"
         
     }

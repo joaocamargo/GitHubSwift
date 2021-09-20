@@ -8,7 +8,7 @@
 import UIKit
 
 class FavoriteListVC: GFDataLoadingVC {
-
+    
     let tableView = UITableView()
     var favorites : [Follower] = []
     
@@ -18,10 +18,10 @@ class FavoriteListVC: GFDataLoadingVC {
         view.backgroundColor = .systemBlue
         configureViewController()
         configureTableview()
-
+        
     }
     
-override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getFavorites()
     }
@@ -38,37 +38,37 @@ override func viewWillAppear(_ animated: Bool) {
         tableView.rowHeight = 80
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.removeExcessCells()
         tableView.register(FavoriteCell.self, forCellReuseIdentifier: FavoriteCell.reuseId)
     }
+    
+    
     
     func getFavorites() {
         PersistenceManager.retrieveFavorites { [weak self] result in
             guard let self = self else { return }
             
             switch result {
-                case .success(let favorites):
-                    if favorites.isEmpty {
-                        self.showEmptyStateView(with: "No favorites to Show\n", in: self.view)
-                        DispatchQueue.main.async {
-                            //remover a linhas horizontais
-                        }
-
-                    } else {
-                        self.favorites = favorites
-                        DispatchQueue.main.async {
-                            self.tableView.reloadData()
-                            self.view.bringSubviewToFront(self.tableView)
-                        }
-                    }
-                    self.favorites = favorites
-                case .failure(let error):
-                    self.presentGFAlertOnMainThread(title: "Error", message: error.rawValue, buttonTitle: "OK")
+            case .success(let favorites):
+                self.updateUI(with: favorites)
+            case .failure(let error):
+                self.presentGFAlertOnMainThread(title: "Error", message: error.rawValue, buttonTitle: "OK")
             }
         }
-
     }
-
-
+    
+    func updateUI(with favorites: ([Follower])) {
+        if favorites.isEmpty {
+            self.showEmptyStateView(with: "No favorites to Show\n", in: self.view)
+        } else {
+            self.favorites = favorites
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.view.bringSubviewToFront(self.tableView)
+            }
+        }
+        self.favorites = favorites
+    }
 }
 
 extension FavoriteListVC: UITableViewDataSource, UITableViewDelegate {
@@ -92,13 +92,14 @@ extension FavoriteListVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
-        let favorite = favorites[indexPath.row]
-        favorites.remove(at: indexPath.row) // LEMBRAR SEMPRE DE REMOVER ANTES DE DELETAR A ROW
-
-        PersistenceManager.updateWith(favorite: favorite, actionType: .remove) { [weak self] error in
+        
+        PersistenceManager.updateWith(favorite: favorites[indexPath.row], actionType: .remove) { [weak self] error in
             guard let self = self else { return }
-            self.tableView.deleteRows(at: [indexPath], with: .left)
-            guard let error = error else { return }
+            guard let error = error else {
+                self.favorites.remove(at: indexPath.row) // LEMBRAR SEMPRE DE REMOVER ANTES DE DELETAR A ROW
+                self.tableView.deleteRows(at: [indexPath], with: .left)
+                return
+            }
             self.presentGFAlertOnMainThread(title: "Error", message: "Cant delete. Due to: \(error.localizedDescription)", buttonTitle: "OK")
         }
         

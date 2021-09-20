@@ -9,8 +9,6 @@ import UIKit
 
 class NetworkManager {
     
-    
-    
     static let shared = NetworkManager()
     private let baseURL = "https://api.github.com/users/"
     let cache = NSCache<NSString, UIImage>()
@@ -43,7 +41,6 @@ class NetworkManager {
                 return
             }
             
-            
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -52,10 +49,7 @@ class NetworkManager {
             } catch {
                 completed(.failure(.invalidData))
             }
-            
-            
         }
-        
         task.resume()
     }
     
@@ -71,7 +65,6 @@ class NetworkManager {
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             if let _ = error {
                 completed(.failure(.unableToComplete))
-                //completed(nil,.unableToComplete)
                 return
             }
             
@@ -85,7 +78,6 @@ class NetworkManager {
                 return
             }
             
-            
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -95,15 +87,12 @@ class NetworkManager {
             } catch {
                 completed(.failure(.invalidData))
             }
-            
-            
         }
         
         task.resume()
     }
     
     func downloadImage(from urlString: String, completed: @escaping(UIImage?)-> Void) {
-        
         let cacheKey = NSString(string: urlString)
         
         if let image = cache.object(forKey: cacheKey) {
@@ -128,55 +117,7 @@ class NetworkManager {
             
             self.cache.setObject(image, forKey: cacheKey)
             completed(image)
-            
         }
-        
         task.resume()
-        
     }
 }
-
-
-
-//NOT USING RESULT
-
-//
-//func getFollowers(for username: String, page: Int, completed: @escaping([Follower]?, ErrorMessages?) -> Void) {
-//    let endpoint = baseURL + "\(username)/followers?per_page=100&page=\(page)"
-//
-//    guard let url = URL(string: endpoint) else {
-//        completed(nil, .invalidUsername)
-//        return
-//    }
-//
-//    let task = URLSession.shared.dataTask(with: url) { data, response, error in
-//        if let _ = error {
-//            completed(nil,.unableToComplete)
-//            return
-//        }
-//
-//        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-//            completed(nil,.invalidResponse)
-//            return
-//        }
-//
-//        guard let data = data else {
-//            completed(nil,.invalidData)
-//            return
-//        }
-//
-//
-//        do {
-//            let decoder = JSONDecoder()
-//            decoder.keyDecodingStrategy = .convertFromSnakeCase
-//            let followers = try decoder.decode([Follower].self, from: data)
-//            completed(followers, nil)
-//        } catch {
-//            completed(nil,.invalidData)
-//        }
-//
-//
-//    }
-//
-//    task.resume()
-//}
